@@ -19,20 +19,35 @@ public class GitRemoteRepositoryTests
     [Test]
     public void GetCommits_ShouldCloneRepository_AndGetGitCommits()
     {
-        // Arrange
-        const string orionUri = "https://github.com/jvcoutinho/orion";
-        const string initialCommitHash = "8688935b5bfa842a33deefec84c01d7f7b6d91ba";
-        Repository repository = new GitRemoteRepository(orionUri);
+        try
+        {
+            // Arrange
+            const string orionUri = "https://github.com/jvcoutinho/orion";
+            const string initialCommitHash = "8688935b5bfa842a33deefec84c01d7f7b6d91ba";
+            Repository repository = new GitRemoteRepository(orionUri);
 
-        // Act
-        var commits = repository.GetCommits();
+            // Act
+            var commits = repository.GetCommits();
 
-        // Assert
-        var orionPath = Path.Combine(Path.GetTempPath(), "orion");
-        Assert.That(orionPath, Does.Exist);
-        Assert.That(commits.Last().Hash, Is.EqualTo(initialCommitHash));
+            // Assert
+            Assert.That(Path.Combine(GitRemoteRepository.CloneDirectory, "orion"), Does.Exist);
+            Assert.That(commits.Last().Hash, Is.EqualTo(initialCommitHash));
+        }
+        finally
+        {
+            // Cleanup
+            DeleteGitDirectory(GitRemoteRepository.CloneDirectory);
+        }
+    }
 
-        // Cleanup
-        Directory.Delete(orionPath, true);
+    private static void DeleteGitDirectory(string path)
+    {
+        var directory = new DirectoryInfo(path) {Attributes = FileAttributes.Normal};
+
+        // ".git" files have a restriction where changing their attributes is required to delete them.
+        foreach (var info in directory.GetFileSystemInfos("*", SearchOption.AllDirectories))
+            info.Attributes = FileAttributes.Normal;
+
+        Directory.Delete(path, true);
     }
 }
