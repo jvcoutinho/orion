@@ -42,6 +42,6 @@ public class Miner
 
     public void Start()
     {
-        _commits.Run();
+        foreach (var commit in _commits) Console.WriteLine(commit);
     }
 }
