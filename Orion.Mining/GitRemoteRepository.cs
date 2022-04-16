@@ -4,8 +4,8 @@ public record GitRemoteRepository : Repository
 {
     public GitRemoteRepository(string uri) : base(uri)
     {
-        if (!Uri.IsWellFormedUriString(uri, UriKind.Absolute))
-            throw new ArgumentException($"{uri} is not a valid URI", nameof(uri));
+        if (!uri.IsRemoteGitRepository())
+            throw new ArgumentException($"{uri} is not a valid remote Git repository", nameof(uri));
 
         Uri = new Uri(uri);
         Path = uri;

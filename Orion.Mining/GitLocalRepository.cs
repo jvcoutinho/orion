@@ -4,7 +4,7 @@ public record GitLocalRepository : Repository
 {
     public GitLocalRepository(string path) : base(path)
     {
-        if (!path.IsGitRepository())
+        if (!path.IsLocalGitRepository())
             throw new ArgumentException($"{path} is not a Git repository", nameof(path));
 
         Path = path;
@@ -18,6 +18,7 @@ public record GitLocalRepository : Repository
             throw new ProgramFailedException($"Git Log operation failed for repository {Path}: {error}");
 
         return output
+            .TrimEnd()
             .Split('\n')
             .Select(hash => new Commit(this, hash));
     }

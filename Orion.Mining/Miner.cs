@@ -33,7 +33,7 @@ public class Miner
     public Miner ProcessWith(params ICommitProcessor[] processors)
     {
         var processedCommits = _commits.Stream(
-            commit => processors.Stream(processor => processor.Process(commit))
+            commit => _ = processors.Stream(processor => processor.Process(commit)).Last()
         );
 
         _commits = processedCommits;

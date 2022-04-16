@@ -7,8 +7,8 @@ public class StringExtensionsTests
     [Test]
     [TestCase("../../../..", ExpectedResult = true)]
     [TestCase("./", ExpectedResult = false)]
-    public bool Test_IsGitRepository(string directory)
+    public bool Test_IsLocalGitRepository(string directory)
     {
-        return directory.IsGitRepository();
+        return directory.IsLocalGitRepository();
     }
 }
