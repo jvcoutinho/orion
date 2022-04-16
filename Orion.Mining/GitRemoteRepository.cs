@@ -11,7 +11,7 @@ public record GitRemoteRepository : Repository
         Path = uri;
     }
 
-    public Uri Uri { get; init; }
+    private Uri Uri { get; }
 
     public override IEnumerable<Commit> GetCommits()
     {
