@@ -12,9 +12,10 @@ public record GitLocalRepository : Repository
 
     public override IEnumerable<Commit> GetCommits()
     {
-        (string output, int statusCode) = Runner.Run("git.exe", Path, "log", "--format=%H");
+        var (output, error, statusCode) = Runner.Run("git.exe", Path, "log", "--format=%H");
 
-        if (statusCode != 0) throw new ProgramFailedException($"Git Log operation failed for repository {Path}");
+        if (statusCode != 0)
+            throw new ProgramFailedException($"Git Log operation failed for repository {Path}: {error}");
 
         return output
             .Split('\n')
